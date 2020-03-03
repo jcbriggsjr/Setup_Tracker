@@ -6,6 +6,7 @@ import gemployees
 import setupwip
 import writesetupwip
 import pyodbc
+import tool_setter
 
 master = Tk()
 master.title("Setup Tracking")
@@ -19,7 +20,27 @@ def displayError():
     #message at x:200,y:200
     popup.geometry("1x1+200+200")#remember its .geometry("WidthxHeight(+or-)X(+or-)Y")
     tkMessageBox.showerror(title="Bad Job Number",message="Job # not found. Please enter correct job #.",parent=popup)
+                           
+def displayProgError(status):
+    #message at x:200,y:200
+    popup.geometry("1x1+200+200")#remember its .geometry("WidthxHeight(+or-)X(+or-)Y")
+    tkMessageBox.showerror(title="Program Sending Status",message=status,parent=popup)    
+    
+def displayProgSuccess(status):
+    #message at x:200,y:200
+    popup.geometry("1x1+200+200")#remember its .geometry("WidthxHeight(+or-)X(+or-)Y")
+    tkMessageBox.showinfo(title="Program Sending Status",message=status,parent=popup)    
 
+def displayToolError(status):
+    #message at x:200,y:200
+    popup.geometry("1x1+200+200")#remember its .geometry("WidthxHeight(+or-)X(+or-)Y")
+    tkMessageBox.showerror(title="Tool Data Sending Status",message=status,parent=popup)
+
+def displayToolSuccess(status):
+    #message at x:200,y:200
+    popup.geometry("1x1+200+200")#remember its .geometry("WidthxHeight(+or-)X(+or-)Y")
+    tkMessageBox.showinfo(title="Tool Data Sending Status",message=status,parent=popup)
+    
 #center screen message
 def makepopup(newmessage):
     popup.geometry("1x1+"+str(int(popup.winfo_screenwidth()/2))+"+"+str(int(popup.winfo_screenheight()/2)))
@@ -82,6 +103,36 @@ def getData(jobnum):
     cursor.close()
     conn.close()    
     return jobpresent
+
+def sendProg():
+    job_num = jobentry.get()
+    machine = machine_dropdown.om_variable.get()
+    if machine not in communicable_list:
+        status = "Can't send data to machine yet. Contact your programmer."
+        displayProgError(status)
+    else:
+        status = tool_setter.process_program_request(job_num, machine)
+        if status[:5] != 'Sendi':
+            displayProgError(status)
+        else:
+            displayProgSuccess(status)
+    
+def sendTool():
+    job_num = jobentry.get()
+    machine = machine_dropdown.om_variable.get()
+    if machine not in communicable_list:
+        status = "Can't send data to machine yet. Contact your programmer."
+        displayToolError(status)
+    else:
+        status = tool_setter.process_tool_request(job_num, machine)
+        if status[:5] != 'Tool ':
+            displayToolError(status)
+        else:
+            displayToolSuccess(status)
+
+def close_window():
+    master.destroy()
+    master.quit()
     
 #create job # input box
 Label(frame, text='Input Job #', bg="pale turquoise").grid(row=1)
@@ -97,9 +148,9 @@ vmclist = [
     'Bruce',
     'Chuck',    
     'Gambit',
-    'Little Bro',
+    'LittleBrother',
     'Rocky',    
-    'Van Damme']
+    'VanDamme']
 auxlist = [
     'Belly Saw',
     'Beveler',
@@ -111,6 +162,8 @@ auxlist = [
     'Polish/De-block',
     'Segway',
     'Slicer Dicer']
+
+communicable_list = ['Chuck', 'VanDamme']
 combinedlist = vmclist + auxlist
 combinedlist.sort()
 
@@ -153,5 +206,14 @@ finishbutton.grid(row=2,column=4)
 Label(frame, text='Reason for long setup ( >1 hour) :', bg="pale turquoise").grid(row=3)
 reason_entry = Entry(frame)
 reason_entry.grid(row=3,column=1)
+
+#create button to send Programs to selected machine
+send_prog_button = Button(frame, text = "Send Program", width=20, command=sendProg, bg="light green", activebackground="light blue")
+send_prog_button.grid(row=4,column=3)
+
+send_tool_button = Button(frame, text="Send Tools", width=20, command=sendTool, bg="light green", activebackground="light blue")
+send_tool_button.grid(row=4,column=4)
+
+Button(master, text="Quit", width=30, command=close_window).grid()
 
 master.mainloop()
