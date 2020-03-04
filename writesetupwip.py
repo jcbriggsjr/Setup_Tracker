@@ -3,7 +3,7 @@ import csv
 from datetime import *
 
 path = "G:\\3 - Production Departments\\11- Scheduling\\Grinding\\Setup_Tracking.xlsx"
-path2 = "G:\\2 - Engineering Department\\1 - Personal Folders\\20 - Chris\\SmartFactory\\Grinding\\setup_tracking.csv"
+path2 = "S:\\Metrics\\5 - Grinding\\setup_tracking.csv"
 
 def openSetupBook():
     workbook = openpyxl.load_workbook(path)
