@@ -105,7 +105,7 @@ def getData(jobnum):
     return jobpresent
 
 def sendProg():
-    job_num = jobentry.get()
+    job_num = filterJobNumber(wip.om_variable.get())    
     machine = machine_dropdown.om_variable.get()
     if machine not in communicable_list:
         status = "Can't send data to machine yet. Contact your programmer."
@@ -118,7 +118,7 @@ def sendProg():
             displayProgSuccess(status)
     
 def sendTool():
-    job_num = jobentry.get()
+    job_num = filterJobNumber(wip.om_variable.get())
     machine = machine_dropdown.om_variable.get()
     if machine not in communicable_list:
         status = "Can't send data to machine yet. Contact your programmer."
@@ -177,6 +177,7 @@ operatorlabel.grid(row=0,column=3)
 
 #create setup operator name list
 oplist = gemployees.readSheet()
+oplist.append('Engineer Testing')
 op_dropdown = Dropdown(frame,oplist,jobentry.get())
 op_dropdown.om_variable.set(oplist[0])
 op_dropdown.om.grid(row=1, column=3)
@@ -186,7 +187,7 @@ startbutton = Button(frame, text = "Start", width=20, command=writetoWIP, bg="li
 startbutton.grid(row=1,column=4)
 
 #create label in front of wip dropdown list
-Label(frame, text='Select Completed Job #', bg="pale turquoise").grid(row=2)
+Label(frame, text='Select In-progress Job #', bg="pale turquoise").grid(row=2)
 
 #create dropdown to select wip jobs to complete. Display job# and machine.
 wipjoblist = setupwip.readwipSheet()
