@@ -1,10 +1,11 @@
-import openpyxl
+import pandas as pd
 
-path = "G:\\3 - Production Departments\\11- Scheduling\\Grinding\\Setup_Tracking.xlsx"
+#path = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\setups_in_progress.csv"
+path = ".//Data//tracked_setups.csv"
 sublist = [0,0]
 
 def main():
-    return readwipSheet()
+    return readWIP()
 
 def readwipSheet():
     wb = openpyxl.load_workbook(path,read_only=True)
@@ -22,6 +23,11 @@ def readwipSheet():
             if type(cell.value) == type("string") and cell.column == 2:
                 wiplist[cell.row-2][1] = cell.value
     return wiplist
-            
+
+def readWIP():
+    data = pd.read_csv(path)
+    print(data['Setup Tech'])
+    
+        
 if __name__ == "__main__":
-    print(main())
+    main()
