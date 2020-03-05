@@ -1,0 +1,4 @@
+Setup_Tracker_GUI.spec
+__pycache__/**
+build/**
+dist/**
