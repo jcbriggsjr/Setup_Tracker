@@ -75,7 +75,11 @@ def filterJobNumber(rawdata):
     rawdata = rawdata[2:]
     rawdata = rawdata.split("'")
     return rawdata[0]
-    
+
+def filterMachine(rawdata):
+    rawdata= rawdata[2:].split("'")
+    return rawdata[2]
+
 def getData(jobnum):
     jobnum = "'" + jobnum + "'"
     jobpresent = True #boolean initialization
@@ -106,7 +110,7 @@ def getData(jobnum):
 
 def sendProg():
     job_num = filterJobNumber(wip.om_variable.get())    
-    machine = machine_dropdown.om_variable.get()
+    machine = filterMachine(wip.om_variable.get())
     if machine not in communicable_list:
         status = "Can't send data to machine yet. Contact your programmer."
         displayProgError(status)
@@ -119,7 +123,7 @@ def sendProg():
     
 def sendTool():
     job_num = filterJobNumber(wip.om_variable.get())
-    machine = machine_dropdown.om_variable.get()
+    machine = filterMachine(wip.om_variable.get())
     if machine not in communicable_list:
         status = "Can't send data to machine yet. Contact your programmer."
         displayToolError(status)

@@ -235,7 +235,7 @@ def delProg(program, s):
     s.send(BYT)
     return readReply(s)
 
-def merge_tool_files(tool_data, job_number, tp):
+def merge_tool_files(tool_data, job_number, tp):    
     if files_to_send(job_number, tp) is None or len(job_number) <5:
         return tool_data, "No tool presets found."
     
@@ -248,8 +248,11 @@ def merge_tool_files(tool_data, job_number, tp):
     tool_data_modified = ""
     #print(tool_data_list[0])
     for e in new_data:
-        index = new_data.index(e)        
+        index = new_data.index(e)
         start = e.find('T')
+        stop = e.find(',',start)
+        if len(e[start:stop]) != 3 or e[start+1] not in '0123456789' or e[start+2] not in '0123456789':
+            return tool_data, "Bad tool data. Contact programmer."
         if e[start:start+3] != '':
             tool_dict[e[start:start+3]] = e[start:] + '\r'
         tool_data_list[index] = e[start:] + '\r'
@@ -258,7 +261,7 @@ def merge_tool_files(tool_data, job_number, tp):
             tool_data_modified += tool_dict[each] + '\n' #adds the newline back to each line of tool list
         else:
             tool_data_modified += tool_dict[each]
-    return tool_data_modified, "Data updated."
+    return tool_data_modified, "Tool data sent."
     
     
 
@@ -308,7 +311,7 @@ def process_tool_request(job_number, vmc):
             sendTool(tool_file, s)
             sendATC(atc_file, s)
             disconnect_machine(s)
-            return 'Tool files sent to ' + vmc + '.'
+            return message
         else:
             disconnect_machine(s)
             return vmc + ' is currently running. Please try again when it is not running.'            
