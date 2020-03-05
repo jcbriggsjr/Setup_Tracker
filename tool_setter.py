@@ -77,7 +77,7 @@ def files_to_send(jobnum, mach_n_file):
     f2s_list = []
     if len(f_in_dir_list) > 0:
         for e in f_in_dir_list:
-            if jobnum in e:
+            if jobnum.upper() in e.upper():
                 f2s_list.append(e)
     else:
         return None    
