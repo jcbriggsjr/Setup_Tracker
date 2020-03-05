@@ -250,9 +250,11 @@ def merge_tool_files(tool_data, job_number, tp):
     for e in new_data:
         index = new_data.index(e)
         start = e.find('T')
-        stop = e.find(',',start)
-        if len(e[start:stop]) != 3 or e[start+1] not in '0123456789' or e[start+2] not in '0123456789':
-            return tool_data, "Bad tool data. Contact programmer."
+        stop = e.find(',',start)     
+        dl = len(e[start:stop]) #data length
+        if dl != 3 or e[start+1] not in '0123456789' or e[start+2] not in '0123456789':
+            if dl !=0:        
+                return tool_data, "Bad tool data. Contact programmer."
         if e[start:start+3] != '':
             tool_dict[e[start:start+3]] = e[start:] + '\r'
         tool_data_list[index] = e[start:] + '\r'

@@ -208,7 +208,7 @@ finishbutton.grid(row=2,column=4)
 #reason_label.grid(row=3, column=0)
 
 #create entry box for long setup reason
-Label(frame, text='Reason for long setup ( >1 hour) :', bg="pale turquoise").grid(row=3)
+Label(frame, text='Enter reason for setup longer than 1 hour:', bg="pale turquoise").grid(row=3)
 reason_entry = Entry(frame)
 reason_entry.grid(row=3,column=1)
 
