@@ -1,10 +1,21 @@
+import pandas as pd
+import numpy as np
 import openpyxl
 import csv
 from datetime import *
 
 path = "G:\\3 - Production Departments\\11- Scheduling\\Grinding\\Setup_Tracking.xlsx"
+
+#trackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\tracked_setups.csv"
+#untrackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\untracked_setups.csv"
+
+trackpath = ".\\Data\\tracked_setups.csv"
+wippath = ".\\Data\\setups_in_progress.csv"
+untrackpath = ".\\Data\\untracked_setups.csv"
+
 path2 = "S:\\Metrics\\5 - Grinding\\setup_tracking.csv"
 
+#will be obsolete
 def openSetupBook():
     workbook = openpyxl.load_workbook(path)
     return workbook
@@ -34,7 +45,18 @@ def writewipSheet(jobnum=0, machine='none', operator='none'):
     sh.cell(row=openrow,column = 4).value = today
     sh.cell(row=openrow,column = 5).value = when    
     wb.save(path)
-    
+
+#writeWip saves to a CSV file instead of 
+def writeWip(sd=['00000','nomach','no Opr']):
+    now = pd.Timestamp.now()
+    today = pd.Timestamp.date(now)
+    when = pd.Timestamp.time(now)
+    sd.append(today)
+    sd.append(when)
+    with open(wippath, 'a', newline= '\n') as wipcsv:
+        trackwriter = csv.writer(wipcsv, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+        trackwriter.writerow([sd[0]] + [sd[1]] + [sd[2]] + [sd[3]] + [sd[4]])
+
     
 def findCompletedWip(jobnum):
     wb = openSetupBook()
@@ -46,7 +68,32 @@ def findCompletedWip(jobnum):
                 print("found it")
                 cell_row = cell.row
                 return cell_row
-    return cell_row        
+    return cell_row
+
+def findCompWip(jobnum):
+    df = pd.read_csv(wippath)
+    dfilter = df['Job Number'].astype(str) == jobnum
+    if df[dfilter].values.size > 0:
+        found = df[dfilter].values        
+        return found[0]
+    else:        
+        return None
+
+
+def writeCompleted(jobnum="",comment=""):
+    complete_data = findCompWip(jobnum)
+    now = pd.Timestamp.now()
+    today = pd.Timestamp.date(now)
+    finish = pd.Timestamp.time(now)
+    start = pd.to_datetime(complete_data[3] + 'T' + complete_data[4])    
+    total_hours = pd.Timedelta(now - start).total_seconds()/3600  
+    ml = complete_data.tolist() #ml is mylist
+    ml.extend([finish,total_hours,comment])   
+    
+    with open(trackpath, 'a', newline='\n') as trackcsv:
+        trackwriter = csv.writer(trackcsv, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+        trackwriter.writerow(ml)
+    
     
 def writeCompletedSheet(jobnum = "", ls_reason = ""):    
     read_row = findCompletedWip(jobnum)
@@ -80,11 +127,10 @@ def writeCompletedSheet(jobnum = "", ls_reason = ""):
     wb.save(path)
     writeSetupCSV(jobnum, machine, operator, today, total_hours)
     
-def calcHours(start_date, start_time, end_date_time):    
-    start = datetime.combine(start_date, start_time)    
+def calcHours(start, end_date_time):        
     dtime = end_date_time - start
     dhours = (dtime.days*24) + (dtime.seconds/3600)
     return dhours    
     
 if __name__ == "__main__":    
-    writeCompletedSheet("1234")
+    writeCompleted('12345')

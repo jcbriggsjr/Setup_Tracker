@@ -53,11 +53,11 @@ def writetoWIP():
     jobnum = jobentry.get()
     if not getData(jobnum):
         displayError()
-        return
-    writesetupwip.writewipSheet(jobnum, machine, operator)
+        return    
+    writesetupwip.writeWip([jobnum,machine,operator]) #csv version
     outputstring = str(machine) + " " + str(operator) + " " + str(datetime.today().time().strftime("%H:%M:%S")) + " job # " + str(jobnum)
     makepopup(outputstring)
-    wip.options = setupwip.readwipSheet()
+    wip.options = setupwip.readWIP() #csv version
     wip.update_option_menu()
     wip.om_variable.set(wip.options[0])
     jobentry.delete(0, 'end')
