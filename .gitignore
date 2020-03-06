@@ -3,3 +3,4 @@ Setup_Tracker_V2.0.1.exe
 __pycache__/**
 build/**
 dist/**
+*.ipynb*

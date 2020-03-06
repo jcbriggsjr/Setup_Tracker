@@ -72,13 +72,13 @@ def writetoFinish():
     reason_entry.delete(0,'end')
 
 def filterJobNumber(rawdata):
-    rawdata = rawdata[2:]
-    rawdata = rawdata.split("'")
+    rawdata = rawdata[1:]
+    rawdata = rawdata.split(" ")
     return rawdata[0]
 
 def filterMachine(rawdata):
     rawdata= rawdata[2:].split("'")
-    return rawdata[2]
+    return rawdata[1].strip()
 
 def getData(jobnum):
     jobnum = "'" + jobnum + "'"
@@ -194,7 +194,7 @@ startbutton.grid(row=1,column=4)
 Label(frame, text='Select In-progress Job #', bg="pale turquoise").grid(row=2)
 
 #create dropdown to select wip jobs to complete. Display job# and machine.
-wipjoblist = setupwip.readwipSheet()
+wipjoblist = setupwip.readWIP()
 wip = Dropdown(frame, wipjoblist, jobentry.get())
 wip.om.grid(row=2,column=1)
 wip.om_variable.set(wipjoblist[0])
