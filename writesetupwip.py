@@ -51,11 +51,10 @@ def writeWip(sd=['00000','nomach','no Opr']):
     now = pd.Timestamp.now()
     today = pd.Timestamp.date(now)
     when = pd.Timestamp.time(now)
-    sd.append(today)
-    sd.append(when)
+    sd.extend([today,when])
     with open(wippath, 'a', newline= '\n') as wipcsv:
         trackwriter = csv.writer(wipcsv, delimiter=',', quoting=csv.QUOTE_MINIMAL)
-        trackwriter.writerow([sd[0]] + [sd[1]] + [sd[2]] + [sd[3]] + [sd[4]])
+        trackwriter.writerow(sd)
 
     
 def findCompletedWip(jobnum):
