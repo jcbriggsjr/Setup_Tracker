@@ -65,8 +65,9 @@ def writetoWIP():
 def writetoFinish():
     long_setup_reason = reason_entry.get()
     completed_job = filterJobNumber(wip.om_variable.get())
-    writesetupwip.writeCompletedSheet(completed_job, long_setup_reason)
-    wip.options = setupwip.readwipSheet()
+    print(completed_job)
+    writesetupwip.writeCompleted(completed_job, long_setup_reason) #csv version
+    wip.options = setupwip.readWIP()
     wip.update_option_menu()
     wip.om_variable.set(wip.options[0])
     reason_entry.delete(0,'end')
@@ -74,7 +75,8 @@ def writetoFinish():
 def filterJobNumber(rawdata):
     rawdata = rawdata[1:]
     rawdata = rawdata.split(" ")
-    return rawdata[0]
+    job_number = rawdata[0][1:-1]
+    return job_number
 
 def filterMachine(rawdata):
     rawdata= rawdata[2:].split("'")
