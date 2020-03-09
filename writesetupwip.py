@@ -83,8 +83,10 @@ def findCompWip(jobnum):
         return None
 
 def writeCompleted(jobnum="",comment=""):
-    complete_data = findCompWip(jobnum)
-    print('complete_data = ', complete_data)
+    complete_data = findCompWip(jobnum)  
+    if complete_data == None:
+        print('No data to track.')
+        return
     now = pd.Timestamp.now()
     today = pd.Timestamp.date(now)
     finish = pd.Timestamp.time(now)

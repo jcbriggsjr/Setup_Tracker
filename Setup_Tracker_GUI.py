@@ -64,8 +64,7 @@ def writetoWIP():
     
 def writetoFinish():
     long_setup_reason = reason_entry.get()
-    completed_job = filterJobNumber(wip.om_variable.get())
-    print(completed_job)
+    completed_job = filterJobNumber(wip.om_variable.get())    
     writesetupwip.writeCompleted(completed_job, long_setup_reason) #csv version
     wip.options = setupwip.readWIP()
     wip.update_option_menu()
