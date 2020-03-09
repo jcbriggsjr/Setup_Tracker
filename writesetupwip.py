@@ -4,15 +4,16 @@ import time
 
 excelpath = r".\\Data\\Setup_Tracking.xlsx"
 
-#trackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\tracked_setups.csv"
-#untrackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\untracked_setups.csv"
+trackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\tracked_setups.csv"
+untrackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\untracked_setups.csv"
+wippath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\setups_in_progress.csv"
 
-trackpath = ".\\Data\\tracked_setups.csv"
-wippath = ".\\Data\\setups_in_progress.csv"
-untrackpath = ".\\Data\\untracked_setups.csv"
+#trackpath = ".\\Data\\tracked_setups.csv"
+#wippath = ".\\Data\\setups_in_progress.csv"
+#untrackpath = ".\\Data\\untracked_setups.csv"
 
-#metricspath = "S:\\Metrics\\5 - Grinding\\setup_tracking.csv"
-metricspath = ".\\Data\\setup_tracking.csv"
+metricspath = "S:\\Metrics\\5 - Grinding\\setup_tracking.csv"
+#metricspath = ".\\Data\\setup_tracking.csv"
 
 def writeSetupCSV(path, source, setup_list=[]):
     while True:

@@ -1,8 +1,8 @@
 import pandas as pd
 import openpyxl
 
-#this is production path = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\setups_in_progress.csv"
-path = ".//Data//setups_in_progress.csv" #testing path
+path = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\setups_in_progress.csv"
+#path = ".//Data//setups_in_progress.csv" #testing path
 sublist = [0,0]
 
 def main():
