@@ -1,5 +1,5 @@
 Setup_Tracker_GUI.spec
-Setup_Tracker_V2.0.1.exe
+*.exe
 __pycache__/**
 build/**
 dist/**
