@@ -16,6 +16,19 @@ frame.grid()
 
 popup = Tk()
 popup.wm_withdraw()
+
+def update():
+    wip.options = setupwip.readWIP() #csv 
+    test = wip.options[0][0]    
+        
+    if 'None' in wip.options[0]:
+        wip.om_variable.set('None')
+    elif not wip.om_variable.get() in str(wip.options):
+        wip.om_variable.set(wip.options[0])
+        
+    wip.update_option_menu()
+    master.after(1000,update)
+    
 def displayError():
     #message at x:200,y:200
     popup.geometry("1x1+200+200")#remember its .geometry("WidthxHeight(+or-)X(+or-)Y")
@@ -72,12 +85,12 @@ def writetoFinish():
     reason_entry.delete(0,'end')
 
 def filterJobNumber(rawdata):
-    rawdata = rawdata[1:]
-    rawdata = rawdata.split(" ")
-    job_number = rawdata[0][1:-1]
+    endof = rawdata.find(' ')
+    job_number = rawdata[1:endof]   
     return job_number
 
 def filterMachine(rawdata):
+    print(rawdata)
     rawdata= rawdata[2:].split("'")
     return rawdata[1].strip()
 
@@ -181,8 +194,7 @@ operatorlabel = Label(frame, text="Setup Operator", bg="pale turquoise", height=
 operatorlabel.grid(row=0,column=3)
 
 #create setup operator name list
-oplist = gemployees.readSheet()
-oplist.append('Engineer Testing')
+oplist = gemployees.readEmployees()
 op_dropdown = Dropdown(frame,oplist,jobentry.get())
 op_dropdown.om_variable.set(oplist[0])
 op_dropdown.om.grid(row=1, column=3)
@@ -222,4 +234,5 @@ send_tool_button.grid(row=4,column=4)
 
 Button(master, text="Quit", width=30, command=close_window).grid()
 
+master.after(1000,update)
 master.mainloop()

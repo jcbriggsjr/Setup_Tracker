@@ -1,20 +1,21 @@
-import openpyxl
+import csv
 
-path = "G:\\Consolidated Training\\Factory Wide Training Matricies\\Grinding Matrix.xlsx"
-emplist = []
+path = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\grinding_employees.csv"
 
 def main():
-    return readSheet()
+    return readEmployees()
 
-def readSheet():
-    wb = openpyxl.load_workbook(path)
-    sh = wb["Sheet1"]
-    for row in sh.iter_rows(min_row=7, max_col=1, max_row=sh.max_row, values_only=True):
-        for cell in row:            
-            if cell != None and "SHIFT" not in cell and "BELOW" not in cell:                
-                emplist.append(cell)
-            if "BELOW" in cell:
-                return emplist     
+def readEmployees():
+    emplist = []
+    
+    with open(path, newline='\n') as f:
+        reader = csv.reader(f)
+        readlist = list(reader)
+        
+    for e in readlist:
+        emplist.append(e[0])
+    emplist.sort()
+        
     return emplist
 if __name__ == "__main__":
     print(main())

@@ -2,8 +2,8 @@ import pandas as pd
 import csv
 import time
 
-excelpath = r".\\Data\\Setup_Tracking.xlsx"
-
+#excelpath = r".\\Data\\Setup_Tracking.xlsx"
+excelpath = r"G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\Setup_Tracking.xlsx"
 trackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\tracked_setups.csv"
 untrackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\untracked_setups.csv"
 wippath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\setups_in_progress.csv"
@@ -84,8 +84,9 @@ def findCompWip(jobnum):
         return None
 
 def writeCompleted(jobnum="",comment=""):
-    complete_data = findCompWip(jobnum)  
-    if complete_data == None:
+    complete_data = findCompWip(jobnum)   
+    
+    if complete_data.size == 0:
         print('No data to track.')
         return
     now = pd.Timestamp.now()
@@ -100,7 +101,9 @@ def writeCompleted(jobnum="",comment=""):
     
     writeSetupCSV(trackpath,'Setup Tracking',ml)
     writeSetupCSV(metricspath,'Setup Metrics',metrics_list)
-    writeExcel(trackpath, excelpath)
+    
+    # don't need to write data to excel. Separate excel file will be created to generate graphs
+    #writeExcel(trackpath, excelpath)
     
 if __name__ == "__main__": 
     #writeWip(['12345','VanDamme','Engineering Test'])
