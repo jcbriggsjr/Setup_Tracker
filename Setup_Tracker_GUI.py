@@ -21,8 +21,7 @@ popup.wm_withdraw()
 
 def update():
     wip.options = setupwip.readWIP() #csv 
-    test = wip.options[0][0]    
-        
+    test = wip.options[0][0]        
     if 'None' in wip.options[0]:
         wip.om_variable.set('None')
     elif not wip.om_variable.get() in str(wip.options):
@@ -88,11 +87,12 @@ def writetoFinish():
 
 def filterJobNumber(rawdata):
     endof = rawdata.find(' ')
-    job_number = rawdata[1:endof]   
+    job_number = rawdata[1:endof]
+    if "'" in job_number:
+        job_number = job_number.split("'")[1]
     return job_number
 
 def filterMachine(rawdata):
-    print(rawdata)
     rawdata= rawdata[2:].split("'")
     return rawdata[1].strip()
 
@@ -125,7 +125,8 @@ def getData(jobnum):
     return jobpresent
 
 def sendProg():
-    job_num = filterJobNumber(wip.om_variable.get())    
+    job_num = filterJobNumber(wip.om_variable.get())
+    print(job_num)
     machine = filterMachine(wip.om_variable.get())
     if machine not in communicable_list:
         status = "Can't send data to machine yet. Contact your programmer."
