@@ -1,3 +1,5 @@
+#v 2.1.1
+
 from datetime import *
 from tkinter import *
 from updateoptionmenu import *
@@ -27,7 +29,7 @@ def update():
         wip.om_variable.set(wip.options[0])
         
     wip.update_option_menu()
-    master.after(1000,update)
+    master.after(10000,update)
     
 def displayError():
     #message at x:200,y:200
@@ -234,5 +236,5 @@ send_tool_button.grid(row=4,column=4)
 
 Button(master, text="Quit", width=30, command=close_window).grid()
 
-master.after(1000,update)
+master.after(10000,update)
 master.mainloop()
