@@ -16,6 +16,19 @@ frame.grid()
 
 popup = Tk()
 popup.wm_withdraw()
+
+def update():
+    wip.options = setupwip.readWIP() #csv 
+    test = wip.options[0][0]    
+        
+    if 'None' in wip.options[0]:
+        wip.om_variable.set('None')
+    elif not wip.om_variable.get() in str(wip.options):
+        wip.om_variable.set(wip.options[0])
+        
+    wip.update_option_menu()
+    master.after(1000,update)
+    
 def displayError():
     #message at x:200,y:200
     popup.geometry("1x1+200+200")#remember its .geometry("WidthxHeight(+or-)X(+or-)Y")
@@ -53,32 +66,33 @@ def writetoWIP():
     jobnum = jobentry.get()
     if not getData(jobnum):
         displayError()
-        return
-    writesetupwip.writewipSheet(jobnum, machine, operator)
+        return    
+    writesetupwip.writeWip([jobnum,machine,operator]) #csv version
     outputstring = str(machine) + " " + str(operator) + " " + str(datetime.today().time().strftime("%H:%M:%S")) + " job # " + str(jobnum)
     makepopup(outputstring)
-    wip.options = setupwip.readwipSheet()
+    wip.options = setupwip.readWIP() #csv version
     wip.update_option_menu()
     wip.om_variable.set(wip.options[0])
     jobentry.delete(0, 'end')
     
 def writetoFinish():
     long_setup_reason = reason_entry.get()
-    completed_job = filterJobNumber(wip.om_variable.get())
-    writesetupwip.writeCompletedSheet(completed_job, long_setup_reason)
-    wip.options = setupwip.readwipSheet()
+    completed_job = filterJobNumber(wip.om_variable.get())    
+    writesetupwip.writeCompleted(completed_job, long_setup_reason) #csv version
+    wip.options = setupwip.readWIP()
     wip.update_option_menu()
     wip.om_variable.set(wip.options[0])
     reason_entry.delete(0,'end')
 
 def filterJobNumber(rawdata):
-    rawdata = rawdata[2:]
-    rawdata = rawdata.split("'")
-    return rawdata[0]
+    endof = rawdata.find(' ')
+    job_number = rawdata[1:endof]   
+    return job_number
 
 def filterMachine(rawdata):
+    print(rawdata)
     rawdata= rawdata[2:].split("'")
-    return rawdata[2]
+    return rawdata[1].strip()
 
 def getData(jobnum):
     jobnum = "'" + jobnum + "'"
@@ -180,8 +194,7 @@ operatorlabel = Label(frame, text="Setup Operator", bg="pale turquoise", height=
 operatorlabel.grid(row=0,column=3)
 
 #create setup operator name list
-oplist = gemployees.readSheet()
-oplist.append('Engineer Testing')
+oplist = gemployees.readEmployees()
 op_dropdown = Dropdown(frame,oplist,jobentry.get())
 op_dropdown.om_variable.set(oplist[0])
 op_dropdown.om.grid(row=1, column=3)
@@ -194,7 +207,7 @@ startbutton.grid(row=1,column=4)
 Label(frame, text='Select In-progress Job #', bg="pale turquoise").grid(row=2)
 
 #create dropdown to select wip jobs to complete. Display job# and machine.
-wipjoblist = setupwip.readwipSheet()
+wipjoblist = setupwip.readWIP()
 wip = Dropdown(frame, wipjoblist, jobentry.get())
 wip.om.grid(row=2,column=1)
 wip.om_variable.set(wipjoblist[0])
@@ -221,4 +234,5 @@ send_tool_button.grid(row=4,column=4)
 
 Button(master, text="Quit", width=30, command=close_window).grid()
 
+master.after(1000,update)
 master.mainloop()

@@ -20,11 +20,11 @@ class Dropdown():
                         
     def add_option(self, to_add):
         self.options.append(to_add)        
-        print(self.options)
+        self.options
 
     def del_option(self, to_del):             
         self.options.remove(to_del)        
-        print(self.options)
+        self.options
                            
     def option_select(self, *args):
-        print(self.om_variable.get())
+        self.om_variable.get()
