@@ -3,10 +3,10 @@ import csv
 import time
 
 #excelpath = r".\\Data\\Setup_Tracking.xlsx"
-excelpath = r"G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\Setup_Tracking.xlsx"
-trackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\tracked_setups.csv"
-untrackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\untracked_setups.csv"
-wippath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\setups_in_progress.csv"
+excelpath = r"G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup_Tracker\\Data\\Setup_Tracking.xlsx"
+trackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup_Tracker\\Data\\tracked_setups.csv"
+untrackpath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup_Tracker\\Data\\untracked_setups.csv"
+wippath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup_Tracker\\Data\\setups_in_progress.csv"
 
 #trackpath = ".\\Data\\tracked_setups.csv"
 #wippath = ".\\Data\\setups_in_progress.csv"

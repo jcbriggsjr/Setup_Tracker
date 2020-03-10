@@ -1,6 +1,6 @@
 import csv
 
-path = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup Tracker\\Data\\grinding_employees.csv"
+path = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Documents\\4 - Programs & Software\\1 - Operating Software\\Setup_Tracker\\Data\\grinding_employees.csv"
 
 def main():
     return readEmployees()

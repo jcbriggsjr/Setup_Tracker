@@ -93,8 +93,12 @@ def filterJobNumber(rawdata):
     return job_number
 
 def filterMachine(rawdata):
-    rawdata= rawdata[2:].split("'")
-    return rawdata[1].strip()
+    start = rawdata.find(' ')
+    machine = rawdata[start:]
+    if "'" in machine:
+        machine = machine.split("'")[1]
+    print(machine)
+    return machine
 
 def getData(jobnum):
     jobnum = "'" + jobnum + "'"
