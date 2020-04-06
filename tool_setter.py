@@ -28,6 +28,9 @@ bruceap = path + 'Bruce\\ATC_data\\'
 chuckap = path + 'Chuck\\ATC_data\\'
 vandammeap = path + 'VanDamme\\ATC_data\\'
 
+strikepath = 'Striking\\'
+probepath = 'Probing\\'
+
 BUFFER_SIZE = 1024
 
 def connect_to_machine(machine):
@@ -64,7 +67,7 @@ def find_save_path(customer):
     folder = [s for s in dir_list if customer.lower() in s.lower()]
     if len(folder) > 0:
         return search_dir + '\\' + folder[0] + '\\'
-    return search_dir + '\\' + "MANUAL SORT\\"
+    return search_dir + "\\MANUAL SORT\\"
 
 def save_file(sp, pdata, header):
     path = sp + header + '.nc'
@@ -72,8 +75,8 @@ def save_file(sp, pdata, header):
         file.write(pdata)
         file.close()
 
-def files_to_send(jobnum, mach_n_file):
-    f_in_dir_list = glob.glob(mach_n_file + jobnum + '*')
+def files_to_send(jobnum, filepath):
+    f_in_dir_list = glob.glob(filepath + jobnum + '*')
     f2s_list = []
     if len(f_in_dir_list) > 0:
         for e in f_in_dir_list:
@@ -99,7 +102,7 @@ def readReply(s):
         count = reply.count('%')
     return reply
 
-def testCommand(cmd): #this is used to send misc commands to see the machine response
+def testCommand(cmd, s): #this is used to send misc commands to see the machine response
     loadData(cmd)
     reply = readReply(s)
     print(reply)
@@ -179,6 +182,20 @@ def sendTool(tooldata, s, cmd="TOLNI1"):
 def sendATC(atcdata, s, cmd="ATCTL"):
     send_Data(atcdata, cmd, s)
     readReply(s)
+
+# send_strikeprobe requires program file as a string, program number to send
+# and s as the network connection
+def send_StrikeProbe(progdata, prognumber, s):
+    # send_Data handles sending the actual data over. 
+    send_Data(progdata,prognumber,s)
+    # check reply to see if we were successful in sending program
+    reply = readReply(s)
+    if reply[17:19] != '00':
+        return "Error sending program"
+    else:            
+        return "Sending program files success."
+
+
     
 def sendProg(pnum, jobnum, pp, s):
     program_list = files_to_send(jobnum, pp)    
@@ -320,3 +337,42 @@ def process_tool_request(job_number, vmc):
     else:
         disconnect_machine(s)
         return 'No tool files to send to ' + vmc + '. Contact your presetter'
+    
+def process_strikeprobe_request(job_number, vmc, prog_type):
+    
+    # set path to desired files
+    # initialize program number
+    if prog_type == 'Striking':
+        selectedpath = path + vmc + '\\Striking\\'
+        program_number = 2001
+    else:
+        selectedpath = path + vmc + '\\Probing\\' 
+        program_number = 3001
+    
+    s = connect_to_machine(vmc)
+    # get list of files that match job number
+    files_list = files_to_send(job_number,selectedpath)    
+    opstatus, mode = get_operation_state(s)
+    # verify machine is not operating
+    if opstatus != 'Operating':
+        for filepath in files_list:
+            # send each file found in list
+            with open(filepath,'r') as file:
+                program_data = file.read()
+            # cast program number as string and add "O"
+            pnum_str = 'O' + str(program_number)
+            send_msg = send_StrikeProbe(program_data,pnum_str, s)
+            if send_msg != "Sending program files success.":
+                return send_msg + ". contact your presetter."
+            program_number += 1
+        return prog_type + " programs sent successfully."
+        disconnect_machine(s)
+    else:
+        disconnect_machine(s)
+        return vmc + ' is currently running. Please try again when it is not running.'
+
+if __name__ == "__main__":
+    files_list = files_to_send('12345',"G://3 - Production Departments//4 - Grinding//9 - VMCs//4 - Programs & Software//10-Programs_and_Tools_to_Transfer//VanDamme//Striking//")
+    for path in files_list:
+        with open(path,'r') as file:
+            print(file.read())

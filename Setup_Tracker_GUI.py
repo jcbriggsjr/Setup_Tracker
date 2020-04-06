@@ -129,8 +129,7 @@ def getData(jobnum):
     return jobpresent
 
 def sendProg():
-    job_num = filterJobNumber(wip.om_variable.get())
-    print(job_num)
+    job_num = filterJobNumber(wip.om_variable.get())    
     machine = filterMachine(wip.om_variable.get())
     if machine not in communicable_list:
         status = "Can't send data to machine yet. Contact your programmer."
@@ -154,6 +153,34 @@ def sendTool():
             displayToolError(status)
         else:
             displayToolSuccess(status)
+
+def sendProbe():
+    job_num = filterJobNumber(wip.om_variable.get())
+    machine = filterMachine(wip.om_variable.get())
+    if machine not in communicable_list:
+        status = "Can't send data to machine yet. Contact your programmer."
+        displayProgError(status)
+    else:
+        status = tool_setter.process_strikeprobe_request(job_num, machine, 'Probing')
+        if status[:5] != 'Probi':
+            displayProgError(status)
+        else:
+            displayProgSuccess(status)
+            
+def sendStrike():
+    job_num = filterJobNumber(wip.om_variable.get())
+    machine = filterMachine(wip.om_variable.get())
+    if machine not in communicable_list:
+        status = "Can't send data to machine yet. Contact your programmer."
+        displayProgError(status)
+    else:
+        status = tool_setter.process_strikeprobe_request(job_num, machine, 'Striking')
+        print(status)
+        if status[:5] != 'Strik':
+            displayProgError(status)
+        else:
+            displayProgSuccess(status)
+    
 
 def close_window():
     master.destroy()
@@ -238,6 +265,12 @@ send_prog_button.grid(row=4,column=3)
 
 send_tool_button = Button(frame, text="Send Tools", width=20, command=sendTool, bg="light green", activebackground="light blue")
 send_tool_button.grid(row=4,column=4)
+
+send_probe_button = Button(frame, text = "Send Probing", width=20, command=sendProbe, bg="light green", activebackground="light blue")
+send_probe_button.grid(row=5,column=4,padx=5,pady=10)
+
+send_strike_button = Button(frame, text = "Send Strike",width=20, command=sendStrike, bg="light green", activebackground="light blue")
+send_strike_button.grid(row=5,column=3,padx=5,pady=10)
 
 Button(master, text="Quit", width=30, command=close_window).grid()
 
