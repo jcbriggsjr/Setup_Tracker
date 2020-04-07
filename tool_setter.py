@@ -197,33 +197,23 @@ def send_StrikeProbe(progdata, prognumber, s):
 
 
     
-def sendProg(pnum, jobnum, pp, s):
+def sendProg(jobnum, pp, s):
     program_list = files_to_send(jobnum, pp)    
-    pnum = edit_pnum(pnum)
+    pnum = 1001
     if program_list is not None:
         for path in program_list:            
-            temp = pnum[1:]
-            pnum = edit_pnum(str(int(temp) + program_list.index(path)))            
+            pnum_str = 'O' + str(pnum)
             program = read_file(path)
             program = editProg(program, jobnum)
-            send_Data(program, pnum, s)
+            send_Data(program, pnum_str, s)
             reply = readReply(s)
+            pnum += 1
             if reply[17:19] != '00':
                 return "Error sending program"
-            else:            
-                return "Sending program files success."
+            
+        return "Sending program files success."
     else:
         return "No program found."
-    
-
-def edit_pnum(pnum):      
-    if pnum[0] != 'O':
-        pnum = 'O' + pnum
-    if any(i for i in pnum[1:] if i not in '0123456789'):
-        return "Bad program number."
-    while len(pnum) < 5:        
-        pnum = pnum[0] + '0' + pnum[1:]
-    return pnum
 
 def editProg(program, jobnum):
     job_line = program.find("(JOB")
@@ -306,16 +296,19 @@ def process_program_request(job_number, vmc):
             save_file(sp, full, newhead) #need a try: except setup here?? this line saves program
         except:
             print("program " + newhead[9:15] + " empty")
-        #delProg(program)
+        delProg(program)
         #This space reserved for delProg(program) 
-        #This needs to check whether program was called from setup tracker            
+        
     opstatus, mode = get_operation_state(s)
+    # copy program to a pallet 2 version
+    modify_prog_pallet2(pp, job_number)
+    
     if opstatus != 'Operating':
-        send_p_msg = sendProg('1001', job_number, pp, s)
+        send_p_msg = sendProg(job_number, pp, s)
         disconnect_machine(s)
         if send_p_msg != "Sending program files success.":
             return send_p_msg + ". Contact your presetter."
-        return send_p_msg + " Program sent as O1001."
+        return send_p_msg + " Programs sent."
     else:
         disconnect_machine(s)
         return vmc + ' is currently running. Please try again when it is not running.'
@@ -370,9 +363,26 @@ def process_strikeprobe_request(job_number, vmc, prog_type):
     else:
         disconnect_machine(s)
         return vmc + ' is currently running. Please try again when it is not running.'
-
+    
+def modify_prog_pallet2(pp, job_number):
+    # get path to program pallet 1
+    program_path = files_to_send(job_number, pp)
+    # read pallet 1 program
+    with open(program_path[0], 'r') as file:
+        pallet2_program = file.read()
+    # modify pallet 1 program to save back as pallet 2 program
+    # changing which WCS is used
+    pallet2_program = pallet2_program.replace("G54.1 P1", "G54.1 P4")
+    pallet2_program = pallet2_program.replace("G54.1 P2", "G54.1 P5")
+    pallet2_program = pallet2_program.replace("G54.1 P3", "G54.1 P6")
+    
+    # create program pallet 2 path
+    program_path2 = pp + job_number + '_pallet2.nc'
+    # save program pallet 2 in same directory as program pallet 1
+    with open(program_path2, 'w') as file2:
+        file2.write(pallet2_program)
+    
+    
 if __name__ == "__main__":
-    files_list = files_to_send('12345',"G://3 - Production Departments//4 - Grinding//9 - VMCs//4 - Programs & Software//10-Programs_and_Tools_to_Transfer//VanDamme//Striking//")
-    for path in files_list:
-        with open(path,'r') as file:
-            print(file.read())
+    pp,tp,ap = set_paths('VanDamme')
+    modify_prog_pallet2(pp,'12345')
