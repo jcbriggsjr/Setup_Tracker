@@ -296,7 +296,7 @@ def process_program_request(job_number, vmc):
             save_file(sp, full, newhead) #need a try: except setup here?? this line saves program
         except:
             print("program " + newhead[9:15] + " empty")
-        delProg(program)
+        delProg(program, s)
         #This space reserved for delProg(program) 
         
     opstatus, mode = get_operation_state(s)

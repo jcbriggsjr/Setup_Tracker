@@ -270,8 +270,8 @@ send_probe_button = Button(frame, text = "Send Probing", width=20, command=sendP
 send_probe_button.grid(row=5,column=4,padx=5,pady=10)
 
 # send strike button is commented out for current release. probing seems to work well, striking needs more testing 4-7-2020
-#send_strike_button = Button(frame, text = "Send Strike",width=20, command=sendStrike, bg="light green", activebackground="light blue")
-#send_strike_button.grid(row=5,column=3,padx=5,pady=10)
+send_strike_button = Button(frame, text = "Send Strike",width=20, command=sendStrike, bg="light green", activebackground="light blue")
+send_strike_button.grid(row=5,column=3,padx=5,pady=10)
 
 Button(master, text="Quit", width=30, command=close_window).grid()
 
