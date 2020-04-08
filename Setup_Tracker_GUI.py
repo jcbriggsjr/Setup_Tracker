@@ -78,8 +78,10 @@ def writetoWIP():
     
 def writetoFinish():
     long_setup_reason = reason_entry.get()
-    completed_job = filterJobNumber(wip.om_variable.get())    
-    writesetupwip.writeCompleted(completed_job, long_setup_reason) #csv version
+    completed_job = filterJobNumber(wip.om_variable.get())
+    isbreak = breaktime.get()
+    islunch = lunch.get()
+    writesetupwip.writeCompleted(completed_job, long_setup_reason, isbreak, islunch) #csv version
     wip.options = setupwip.readWIP()
     wip.update_option_menu()
     wip.om_variable.set(wip.options[0])
@@ -272,6 +274,14 @@ send_probe_button.grid(row=5,column=4,padx=5,pady=10)
 # send strike button is commented out for current release. probing seems to work well, striking needs more testing 4-7-2020
 send_strike_button = Button(frame, text = "Send Strike",width=20, command=sendStrike, bg="light green", activebackground="light blue")
 send_strike_button.grid(row=5,column=3,padx=5,pady=10)
+
+breaktime = IntVar()
+breakbox = Checkbutton(frame, variable=breaktime, onvalue=True, offvalue=False, text ='Break', takefocus = 0, bg='pale turquoise')
+breakbox.grid(row=2,column=2)
+
+lunch = IntVar()
+lunchbox = Checkbutton(frame, variable=lunch, onvalue=True, offvalue=False, text='Lunch', takefocus = 0, bg='pale turquoise')
+lunchbox.grid(row=2,column=3)
 
 Button(master, text="Quit", width=30, command=close_window).grid()
 
