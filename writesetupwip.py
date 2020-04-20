@@ -80,7 +80,10 @@ def writeCompleted(jobnum="",comment="",breaktime=False,lunch=False):
     metrics_list = [ml[0],ml[1],ml[2],today,total_hours]    
     
     writeSetupCSV(trackpath,'Setup Tracking',ml)
-    writeSetupCSV(metricspath,'Setup Metrics',metrics_list)
+    try:
+        writeSetupCSV(metricspath,'Setup Metrics',metrics_list)
+    except:
+        print('Unable to write to Setup Metrics')
     
 if __name__ == "__main__": 
     #writeWip(['12345','VanDamme','Engineering Test'])

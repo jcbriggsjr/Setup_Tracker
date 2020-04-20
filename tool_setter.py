@@ -62,7 +62,7 @@ def set_paths(machine):
     return pp.get(machine,'No program path'), tp.get(machine,'No tool path'), ap.get(machine,'No ATC path')
 
 def find_save_path(customer):
-    search_dir = 'G:\\3 - Production Departments\\4 - Grinding\\9 - VMCs\\4 - Programs & Software\\2 - Programs & MC Files - Haas'    
+    search_dir = 'G:\\3 - Production Departments\\4 - Grinding\\9 - VMCs\\4 - Programs & Software\\2 - Programs & MC Files'    
     dir_list = os.listdir(search_dir)
     folder = [s for s in dir_list if customer.lower() in s.lower()]
     if len(folder) > 0:
