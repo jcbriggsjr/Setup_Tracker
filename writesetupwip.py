@@ -15,6 +15,13 @@ wippath = "G:\\3 - Production Departments\\4 - Grinding\\0 - Department Document
 metricspath = "S:\\Metrics\\5 - Grinding\\setup_tracking.csv"
 #metricspath = ".\\Data\\setup_tracking.csv"
 
+# targets below are in hours, used for calculating a weighted score for setups
+intermac_minutes = 45
+intermac_target = round(intermac_minutes / 60.0,2)
+brother_minutes = 60
+brother_target = round(brother_minutes / 60.0,2)
+
+
 def writeSetupCSV(path, source, setup_list=[]):
     while True:
         try:
@@ -67,15 +74,29 @@ def writeCompleted(jobnum="",comment="",breaktime=False,lunch=False):
     total_hours = pd.Timedelta(now - start).total_seconds()
     breaktime = bool(breaktime)
     lunch = bool(lunch)
+    score = 1
     if breaktime:
         total_hours = total_hours - 900
  
     if lunch:
-        total_hours = total_hours - 1800
-  
-    total_hours = total_hours/3600
+        total_hours = total_hours - 1800  
+    total_hours = total_hours/3600    
+    
     ml = complete_data.tolist() #ml is mylist
-    ml.extend([finish,total_hours,comment,breaktime,lunch])   
+    
+    # calculate score based on machine 
+    if ml[1] == "Rocky" or ml[1] == "Gambit":
+        if total_hours < intermac_target*2:            
+            score = round((intermac_target + (intermac_target - total_hours))/intermac_target, 2)
+        else:
+            score = 0
+    else:
+        if total_hours < brother_target*2:            
+            score = round((brother_target + (brother_target - total_hours))/brother_target, 2)
+        else:
+            score = 0
+            
+    ml.extend([finish,total_hours,comment,breaktime,lunch,"",score])   
     #extract job number, machine, operator, finish date, total hours to send to writeSetupCSV for metrics usage
     metrics_list = [ml[0],ml[1],ml[2],today,total_hours]    
     
@@ -86,5 +107,10 @@ def writeCompleted(jobnum="",comment="",breaktime=False,lunch=False):
         print('Unable to write to Setup Metrics')
     
 if __name__ == "__main__": 
-    #writeWip(['12345','VanDamme','Engineering Test'])
-    writeCompleted('93530a')
+    target = .58333
+    total_hours = 1.5
+    if total_hours < target*2:
+        score = round(((target - total_hours) + target)/target,2)
+    else:
+        score = 0
+    print(score)
