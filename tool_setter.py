@@ -226,11 +226,16 @@ def editProg(program, jobnum):
         output = program[:index] + '(JOB ' + jobnum + ')\r\n' + program[index:]
     
     m211_index = output.find("M211")
+    m213_index = output.find("M213")
     if m211_index > 0: #M211 is in the program
-        return output
+        if m213_index > 0: #M213 is also in the program
+            return output
+        else:
+            m30_index = output.find("M30")
+            output = output[:m30_index] + "M213\r\n" + output[m30_index:]    
     else:
         m30_index = output.find("M30")
-        output = output[:m30_index] + "M211\r\n" + output[m30_index:]    
+        output = output[:m30_index] + "M211\r\nM213\r\n" + output[m30_index:]    
     
     return output        
 
