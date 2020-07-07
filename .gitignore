@@ -7,3 +7,4 @@ dist/**
 Data/Grinding/
 sql_access.txt
 check_for_updated_programs.py
+errors.log
