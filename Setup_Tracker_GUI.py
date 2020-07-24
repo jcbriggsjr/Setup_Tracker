@@ -86,6 +86,8 @@ def writetoFinish():
     wip.update_option_menu()
     wip.om_variable.set(wip.options[0])
     reason_entry.delete(0,'end')
+    breaktime.set(0)
+    lunch.set(0)
 
 def filterJobNumber(rawdata):
     endof = rawdata.find(' ')
@@ -217,7 +219,7 @@ auxlist = [
     'Segway',
     'Slicer Dicer']
 
-communicable_list = ['Chuck', 'VanDamme']
+communicable_list = ['Chuck', 'VanDamme', 'Bruce']
 combinedlist = vmclist + auxlist
 combinedlist.sort()
 
