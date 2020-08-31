@@ -16,9 +16,9 @@ metricspath = "S:\\Metrics\\5 - Grinding\\setup_tracking.csv"
 #metricspath = ".\\Data\\setup_tracking.csv"
 
 # targets below are in hours, used for calculating a weighted score for setups
-intermac_minutes = 45
+intermac_minutes = 30
 intermac_target = round(intermac_minutes / 60.0,2)
-brother_minutes = 60
+brother_minutes = 30
 brother_target = round(brother_minutes / 60.0,2)
 
 
