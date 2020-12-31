@@ -13,20 +13,24 @@ path = 'G:\\3 - Production Departments\\4 - Grinding\\9 - VMCs\\4 - Programs & S
  
 machineip = {'Bruce':'192.168.84.201',
             'Chuck':'192.168.84.200',
-            'VanDamme':'192.168.84.203'}
+            'VanDamme':'192.168.84.203',
+            'Dutch':'192.168.84.205'}
 
 
 brucepp = path + 'Bruce\\Programs\\'
 chuckpp = path + 'Chuck\\Programs\\'
 vandammepp = path + 'VanDamme\\Programs\\'
+dutchpp = path + 'Dutch\\Programs\\'
 
 brucetp = path + 'Bruce\\Tools\\'
 chucktp = path + 'Chuck\\Tools\\'
 vandammetp = path + 'VanDamme\\Tools\\'
+dutchtp = path + 'Dutch\\Tools\\'
 
 bruceap = path + 'Bruce\\ATC_data\\'
 chuckap = path + 'Chuck\\ATC_data\\'
 vandammeap = path + 'VanDamme\\ATC_data\\'
+dutchap = path + 'Dutch\\ATC_data\\'
 
 strikepath = 'Striking\\'
 probepath = 'Probing\\'
@@ -48,17 +52,20 @@ def set_paths(machine):
     tp = {
             'Bruce': brucetp,
             'Chuck': chucktp,
-            'VanDamme': vandammetp}
+            'VanDamme': vandammetp,
+            'Dutch': dutchtp}
     pp = {  
             'Bruce': brucepp,
             'Chuck': chuckpp,
-            'VanDamme': vandammepp}
+            'VanDamme': vandammepp,
+            'Dutch': dutchpp}
     
     ap = {
             'Bruce': bruceap,
             'Chuck': chuckap,
-            'VanDamme': vandammeap
-            }
+            'VanDamme': vandammeap,
+            'Dutch': dutchap}
+    
     return pp.get(machine,'No program path'), tp.get(machine,'No tool path'), ap.get(machine,'No ATC path')
 
 def find_save_path(customer):
