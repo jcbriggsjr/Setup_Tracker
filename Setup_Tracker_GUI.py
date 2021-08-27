@@ -1,5 +1,5 @@
 #v 2.1.1
-
+# tool_setter.py contains program pull/save function
 from datetime import *
 from tkinter import *
 from updateoptionmenu import *
@@ -202,25 +202,28 @@ droplabel.grid(row=0,column=2)
 #create dropdown list to select machine
 vmclist = [
     'Bruce',
-    'Chuck',    
+    'Chuck',
+    'Dutch',    
     'Gambit',
     'LittleBrother',
     'Rocky',    
     'VanDamme']
-auxlist = [
-    'Belly Saw',
-    'Beveler',
-    'Blanchard',
-    'Bothner',
-    'Dama Llama',
-    'Mini Drill',
-    'Opposed Drill',
-    'Polish/De-block',
-    'Segway',
-    'Slicer Dicer']
+# =============================================================================
+# auxlist = [
+#     'Belly Saw',
+#     'Beveler',
+#     'Blanchard',
+#     'Bothner',
+#     'Dama Llama',
+#     'Mini Drill',
+#     'Opposed Drill',
+#     'Polish/De-block',
+#     'Segway',
+#     'Slicer Dicer']
+# =============================================================================
 
-communicable_list = ['Chuck', 'VanDamme', 'Bruce']
-combinedlist = vmclist + auxlist
+communicable_list = ['Chuck', 'VanDamme', 'Bruce', 'Dutch']
+combinedlist = vmclist #+ auxlist #auxlist commented out as it likely won't get used 12/31/2020
 combinedlist.sort()
 
 machine_dropdown = Dropdown(frame,combinedlist,jobentry.get())

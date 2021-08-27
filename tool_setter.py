@@ -4,17 +4,18 @@ Created on Fri Feb 21 16:09:13 2020
 
 @author: JBriggs
 """
-
+# function process_program_request pulls programs and saves them. look there for extra line issues
 import socket
 import glob
 import os
+import csv
 
 path = 'G:\\3 - Production Departments\\4 - Grinding\\9 - VMCs\\4 - Programs & Software\\10-Programs_and_Tools_to_Transfer\\'
  
 machineip = {'Bruce':'192.168.84.201',
             'Chuck':'192.168.84.200',
             'VanDamme':'192.168.84.203',
-            'Dutch':'192.168.84.205'}
+            'Dutch':'192.168.84.217'}
 
 
 brucepp = path + 'Bruce\\Programs\\'
@@ -226,11 +227,11 @@ def editProg(program, jobnum):
     job_line = program.find("(JOB")
     if job_line > 0: #if (JOB ) is found, replace with current job #
         job_end = program.find(")",job_line)
-        output = program[:job_line] + '(JOB ' + jobnum + ')\r\n' + program[job_end+2:]        
+        output = program[:job_line] + '(JOB ' + jobnum.upper() + ')\r\n' + program[job_end+2:]        
     else: #if (JOB ) is not found, add job #
         start = program.find('(')
         index = program.find('(',start+1)
-        output = program[:index] + '(JOB ' + jobnum + ')\r\n' + program[index:]
+        output = program[:index] + '(JOB ' + jobnum.upper() + ')\r\n' + program[index:]
     
     m211_index = output.find("M211")
     m213_index = output.find("M213")
@@ -254,11 +255,13 @@ def delProg(program, s):
     s.send(BYT)
     return readReply(s)
 
-def merge_tool_files(tool_data, job_number, tp):    
-    if files_to_send(job_number, tp) is None or len(job_number) <5:
+def merge_tool_files(tool_data, job_number, tp):
+    presets_available = files_to_send(job_number, tp)
+    
+    if presets_available is None or len(job_number) <5:
         return tool_data, "No tool presets found."
     
-    fp = files_to_send(job_number, tp)[0]
+    fp = presets_available[0]
     new_data = read_file(fp).split('\n')
     tool_data_list = tool_data.split('\n')
     tool_dict = {}
@@ -296,6 +299,7 @@ def handle_tools_and_atc(ap, job_number, tp, s):
         
     return tool_data, atc_data, message
 
+#this function pulls programs from VMC and saves to G drive
 def process_program_request(job_number, vmc):
     pp, tp, ap = set_paths(vmc)
     s = connect_to_machine(vmc)
@@ -304,6 +308,7 @@ def process_program_request(job_number, vmc):
         full, head = get_cust_part_from_mac(program, s) #gets program and header from machine        
         newhead = head.replace('?','')
         sp = find_save_path(newhead[:5]) # sp as save path per each program
+        full = "".join([s for s in full.strip().splitlines(True) if s.strip()]) #potential culprit for adding blank lines
         try:
             save_file(sp, full, newhead) #need a try: except setup here?? this line saves program
         except:
@@ -396,5 +401,12 @@ def modify_prog_pallet2(pp, job_number):
     
     
 if __name__ == "__main__":
-    pp,tp,ap = set_paths('VanDamme')
-    modify_prog_pallet2(pp,'12345')
+    
+    tool_data = []
+    with open('C:/Users/jbriggs/Desktop/Tool_data_tests/tool_list.nc.nc') as file:
+        file_reader = csv.reader(file)
+        for e in file_reader:
+            if e:
+                tool_data.append(e)
+    tp = 'C:/Users/jbriggs/Desktop/Tool_data_tests'
+    #mod_tool_data, message = merge_tool_files(tool_data, job_number, tp)
