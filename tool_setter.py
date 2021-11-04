@@ -304,16 +304,16 @@ def process_program_request(job_number, vmc):
     pp, tp, ap = set_paths(vmc)
     s = connect_to_machine(vmc)
     program_list = get_prog_list_at_mach(s)
-    for program in program_list: #cycles through every program on machine
-        full, head = get_cust_part_from_mac(program, s) #gets program and header from machine        
-        newhead = head.replace('?','')
-        sp = find_save_path(newhead[:5]) # sp as save path per each program
-        full = "".join([s for s in full.strip().splitlines(True) if s.strip()]) #potential culprit for adding blank lines
-        try:
-            save_file(sp, full, newhead) #need a try: except setup here?? this line saves program
-        except:
-            print("program " + newhead[9:15] + " empty")
-        delProg(program, s)
+    #for program in program_list: #cycles through every program on machine
+    #    full, head = get_cust_part_from_mac(program, s) #gets program and header from machine        
+    #    newhead = head.replace('?','')
+    #    sp = find_save_path(newhead[:5]) # sp as save path per each program
+    #    full = "".join([s for s in full.strip().splitlines(True) if s.strip()]) #potential culprit for adding blank lines
+    #    try:
+    #        save_file(sp, full, newhead) #need a try: except setup here?? this line saves program
+    #    except:
+    #        print("program " + newhead[9:15] + " empty")
+    #    delProg(program, s)
         #This space reserved for delProg(program) 
         
     opstatus, mode = get_operation_state(s)
